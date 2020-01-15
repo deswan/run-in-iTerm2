@@ -3,8 +3,16 @@
 import iterm2
 import sys
 
+
 title = sys.argv[1]
 path = sys.argv[2]
+commands = sys.argv[3:]
+
+async def runCommand(session, command):
+    return await session.async_send_text(command + '\n')
+
+async def cd(session, path):
+    return await session.async_send_text('cd ' + path + '\n')
 
 async def main(connection):
     app = await iterm2.async_get_app(connection)
@@ -30,28 +38,22 @@ async def main(connection):
             await full.async_set_sync_title(False)
             await app.current_terminal_window.current_tab.current_session.async_set_profile(full)
 
-    # Update the name and disable future updates by
-    # control sequences.
-    #
-    # Changing the name this way is equivalent to
-    # editing the Session Name field in
-    # Session>Edit Session.
 
     await myterm.current_tab.async_set_title(title)
 
+    firstCommand = commands[0]
+    lastCommands = commands[1:]
+
+
     session = myterm.current_tab.current_session
-    await session.async_send_text('cd ' + path + '\n')
-    await session.async_send_text('npm run webpack' + '\n')
+    await cd(session, path)
+    await runCommand(session, firstCommand)
 
-
-    # session2 = await session.async_split_pane(vertical=True)
-    # await session2.async_set_profile_properties(update)
-    # await session2.async_send_text('cd ' + path + '\n')
-    # await session2.async_send_text('npm run develop' + '\n')
-    
-
-    
-
+    for cmd in lastCommands:
+        session2 = await session.async_split_pane(vertical=True)
+        await cd(session2, path)
+        await runCommand(session2, cmd)
+        
 # Passing True for the second parameter means keep trying to
 # connect until the app launches.
 iterm2.run_until_complete(main, True)

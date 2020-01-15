@@ -1,15 +1,25 @@
 {
-  "name": "run_futu",
-  "version": "1.0.0",
-  "description": "",
+  "name": "run-in-iterm2",
+  "version": "1.0.5",
+  "description": "一键在iTerm2中跑齐命令的效率脚本",
+  "bin": {
+    "run": "./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:deswan/run-in-iTerm2.git"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/deswan/run-in-iTerm2",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
   "dependencies": {
-    "inquirer": "^7.0.3"
+    "inquirer": "^7.0.3",
+    "js-yaml": "^3.13.1",
+    "node-yaml": "^4.0.1"
   }
 }
